@@ -1,114 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>API Explorer</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="layout">
+  <div class="app">
     <aside class="sidebar">
       <div class="brand">
-        <span class="brand-dot"></span>
-        <span class="brand-name">API Explorer</span>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <polygon points="10,1 19,5.5 19,14.5 10,19 1,14.5 1,5.5" stroke="var(--accent)" stroke-width="1.4" fill="none"/>
+          <circle cx="10" cy="10" r="2.5" fill="var(--accent)"/>
+        </svg>
+        <span>API Explorer</span>
       </div>
       <nav class="nav">
-        <button class="nav-item active" data-tab="weather">
-          <span class="nav-icon">◎</span> Weather
-        </button>
-        <button class="nav-item" data-tab="nasa">
-          <span class="nav-icon">◎</span> NASA APOD
-        </button>
-        <button class="nav-item" data-tab="crypto">
-          <span class="nav-icon">◎</span> Crypto
-        </button>
-        <button class="nav-item" data-tab="github">
-          <span class="nav-icon">◎</span> GitHub
-        </button>
+        <button class="tab active" data-tab="weather"><span class="ti">🌤</span>Weather</button>
+        <button class="tab" data-tab="crypto"><span class="ti">₿</span>Crypto</button>
+        <button class="tab" data-tab="nasa"><span class="ti">🪐</span>NASA APOD</button>
+        <button class="tab" data-tab="countries"><span class="ti">🌍</span>Countries</button>
+        <button class="tab" data-tab="dictionary"><span class="ti">📖</span>Dictionary</button>
+        <button class="tab" data-tab="recipes"><span class="ti">🍽</span>Recipes</button>
+        <button class="tab" data-tab="pokemon"><span class="ti">⚡</span>Pokémon</button>
+        <button class="tab" data-tab="currency"><span class="ti">💱</span>Currency</button>
+        <button class="tab" data-tab="music"><span class="ti">🎵</span>Music</button>
+        <button class="tab" data-tab="news"><span class="ti">📰</span>HN News</button>
       </nav>
-      <div class="sidebar-footer">
-        <div class="req-counter">
-          <span class="req-num" id="req-count">0</span>
-          <span class="req-label">requests made</span>
-        </div>
+      <div class="sidebar-foot">
+        <span class="req-n" id="req-count">0</span>
+        <span class="req-l">API calls</span>
       </div>
     </aside>
 
-    <main class="content">
-      <section id="weather" class="panel active">
-        <header class="panel-head">
-          <div>
-            <h1 class="panel-title">Weather</h1>
-            <p class="panel-sub">Current conditions via Open-Meteo · No API key required</p>
-          </div>
-          <span class="api-badge">open-meteo.com</span>
-        </header>
-        <div class="input-row">
-          <input id="weather-input" type="text" placeholder="City name, e.g. Tokyo" />
-          <button onclick="fetchWeather()">Fetch</button>
-        </div>
-        <div id="weather-result" class="result-area hidden"></div>
-        <div id="weather-chart-wrap" class="chart-wrap hidden">
-          <p class="chart-label">Current Conditions</p>
-          <canvas id="weather-chart"></canvas>
-        </div>
-      </section>
+    <main class="main">
 
-      <section id="nasa" class="panel">
-        <header class="panel-head">
-          <div>
-            <h1 class="panel-title">NASA Picture of the Day</h1>
-            <p class="panel-sub">Daily astronomy image via NASA APOD API</p>
-          </div>
-          <span class="api-badge">api.nasa.gov</span>
-        </header>
-        <div class="input-row">
-          <button class="full-btn" onclick="fetchNASA()">Load Today's Image</button>
+      <section id="weather" class="panel active">
+        <header class="ph"><div><h1 class="ptitle">Weather</h1><p class="psub">Live conditions · Open-Meteo · No API key</p></div><span class="badge">open-meteo.com</span></header>
+        <div class="row">
+          <div class="ac-wrap"><input id="weather-input" type="text" placeholder="Search city… e.g. Tokyo" autocomplete="off"><div class="sugs" id="weather-sugs"></div></div>
+          <button id="weather-btn" onclick="fetchWeather()">Fetch</button>
         </div>
-        <div id="nasa-result" class="result-area hidden"></div>
+        <div class="cd-wrap hidden" id="weather-cd"><div class="cd-bar" id="weather-cd-bar"></div><span class="cd-lbl" id="weather-cd-lbl"></span></div>
+        <div id="weather-out"></div>
+        <div class="chart-box hidden" id="weather-cb"><p class="ctitle">Conditions Snapshot</p><canvas id="weather-chart"></canvas></div>
       </section>
 
       <section id="crypto" class="panel">
-        <header class="panel-head">
-          <div>
-            <h1 class="panel-title">Crypto Prices</h1>
-            <p class="panel-sub">Live data via CoinGecko public API</p>
-          </div>
-          <span class="api-badge">coingecko.com</span>
-        </header>
-        <div class="input-row">
-          <button class="full-btn" onclick="fetchCrypto()">Fetch Live Prices</button>
+        <header class="ph"><div><h1 class="ptitle">Crypto</h1><p class="psub">Live prices & market stats · CoinGecko · No API key</p></div><span class="badge">coingecko.com</span></header>
+        <div class="row">
+          <div class="ac-wrap"><input id="crypto-input" type="text" placeholder="Search coin… e.g. Bit → Bitcoin" autocomplete="off"><div class="sugs" id="crypto-sugs"></div></div>
+          <button id="crypto-btn" onclick="fetchCrypto()">Fetch</button>
         </div>
-        <div id="crypto-result" class="result-area hidden"></div>
-        <div id="crypto-chart-wrap" class="chart-wrap hidden">
-          <p class="chart-label">24h Price Change %</p>
-          <canvas id="crypto-chart"></canvas>
-        </div>
+        <div class="cd-wrap hidden" id="crypto-cd"><div class="cd-bar" id="crypto-cd-bar"></div><span class="cd-lbl" id="crypto-cd-lbl"></span></div>
+        <div id="crypto-out"></div>
+        <div class="chart-box hidden" id="crypto-cb"><p class="ctitle">24h Change vs BTC & ETH</p><canvas id="crypto-chart"></canvas></div>
       </section>
 
-      <section id="github" class="panel">
-        <header class="panel-head">
-          <div>
-            <h1 class="panel-title">GitHub Profile</h1>
-            <p class="panel-sub">Public stats via GitHub REST API</p>
-          </div>
-          <span class="api-badge">api.github.com</span>
-        </header>
-        <div class="input-row">
-          <input id="github-input" type="text" placeholder="GitHub username, e.g. torvalds" />
-          <button onclick="fetchGitHub()">Fetch</button>
+      <section id="nasa" class="panel">
+        <header class="ph"><div><h1 class="ptitle">NASA APOD</h1><p class="psub">Astronomy Picture of the Day · DEMO_KEY rate limited</p></div><span class="badge">api.nasa.gov</span></header>
+        <div class="row">
+          <input id="nasa-date" type="date" class="date-input">
+          <button id="nasa-btn" onclick="fetchNASA()">Fetch</button>
         </div>
-        <div id="github-result" class="result-area hidden"></div>
-        <div id="github-chart-wrap" class="chart-wrap hidden">
-          <p class="chart-label">Profile Stats</p>
-          <canvas id="github-chart"></canvas>
-        </div>
+        <div class="cd-wrap hidden" id="nasa-cd"><div class="cd-bar" id="nasa-cd-bar"></div><span class="cd-lbl" id="nasa-cd-lbl"></span></div>
+        <div id="nasa-out"></div>
       </section>
+
+      <section id="countries" class="panel">
+        <header class="ph"><div><h1 class="ptitle">Countries</h1><p class="psub">Country facts & stats · RestCountries · No API key</p></div><span class="badge">restcountries.com</span></header>
+        <div class="row">
+          <div class="ac-wrap"><input id="countries-input" type="text" placeholder="Search country… e.g. Jap → Japan" autocomplete="off"><div class="sugs" id="countries-sugs"></div></div>
+          <button id="countries-btn" onclick="fetchCountry()">Fetch</button>
+        </div>
+        <div class="cd-wrap hidden" id="countries-cd"><div class="cd-bar" id="countries-cd-bar"></div><span class="cd-lbl" id="countries-cd-lbl"></span></div>
+        <div id="countries-out"></div>
+      </section>
+
+      <section id="dictionary" class="panel">
+        <header class="ph"><div><h1 class="ptitle">Dictionary</h1><p class="psub">Definitions, phonetics & audio · Free Dictionary API</p></div><span class="badge">dictionaryapi.dev</span></header>
+        <div class="row">
+          <input id="dictionary-input" type="text" placeholder="Enter any English word…" autocomplete="off">
+          <button id="dictionary-btn" onclick="fetchDictionary()">Fetch</button>
+        </div>
+        <div class="cd-wrap hidden" id="dictionary-cd"><div class="cd-bar" id="dictionary-cd-bar"></div><span class="cd-lbl" id="dictionary-cd-lbl"></span></div>
+        <div id="dictionary-out"></div>
+      </section>
+
+      <section id="recipes" class="panel">
+        <header class="ph"><div><h1 class="ptitle">Recipes</h1><p class="psub">Meal search with ingredients · TheMealDB · No key</p></div><span class="badge">themealdb.com</span></header>
+        <div class="row">
+          <div class="ac-wrap"><input id="recipes-input" type="text" placeholder="Search meal… e.g. Pasta, Steak" autocomplete="off"><div class="sugs" id="recipes-sugs"></div></div>
+          <button id="recipes-btn" onclick="fetchRecipe()">Fetch</button>
+        </div>
+        <div class="cd-wrap hidden" id="recipes-cd"><div class="cd-bar" id="recipes-cd-bar"></div><span class="cd-lbl" id="recipes-cd-lbl"></span></div>
+        <div id="recipes-out"></div>
+      </section>
+
+      <section id="pokemon" class="panel">
+        <header class="ph"><div><h1 class="ptitle">Pokémon</h1><p class="psub">Base stats, types & sprites · PokéAPI · No key</p></div><span class="badge">pokeapi.co</span></header>
+        <div class="row">
+          <div class="ac-wrap"><input id="pokemon-input" type="text" placeholder="Search Pokémon… e.g. Char → Charizard" autocomplete="off"><div class="sugs" id="pokemon-sugs"></div></div>
+          <button id="pokemon-btn" onclick="fetchPokemon()">Fetch</button>
+        </div>
+        <div class="cd-wrap hidden" id="pokemon-cd"><div class="cd-bar" id="pokemon-cd-bar"></div><span class="cd-lbl" id="pokemon-cd-lbl"></span></div>
+        <div id="pokemon-out"></div>
+        <div class="chart-box hidden" id="pokemon-cb"><p class="ctitle">Base Stats Radar</p><canvas id="pokemon-chart"></canvas></div>
+      </section>
+
+      <section id="currency" class="panel">
+        <header class="ph"><div><h1 class="ptitle">Currency</h1><p class="psub">Live exchange rates · Frankfurter · No API key</p></div><span class="badge">frankfurter.app</span></header>
+        <div class="row">
+          <select id="currency-from" class="sel">
+            <option value="USD">USD – US Dollar</option>
+            <option value="EUR">EUR – Euro</option>
+            <option value="GBP">GBP – British Pound</option>
+            <option value="JPY">JPY – Japanese Yen</option>
+            <option value="CAD">CAD – Canadian Dollar</option>
+            <option value="AUD">AUD – Australian Dollar</option>
+            <option value="CHF">CHF – Swiss Franc</option>
+            <option value="CNY">CNY – Chinese Yuan</option>
+            <option value="INR">INR – Indian Rupee</option>
+            <option value="BRL">BRL – Brazilian Real</option>
+            <option value="MXN">MXN – Mexican Peso</option>
+            <option value="KRW">KRW – South Korean Won</option>
+          </select>
+          <button id="currency-btn" onclick="fetchCurrency()">Get Rates</button>
+        </div>
+        <div class="cd-wrap hidden" id="currency-cd"><div class="cd-bar" id="currency-cd-bar"></div><span class="cd-lbl" id="currency-cd-lbl"></span></div>
+        <div id="currency-out"></div>
+        <div class="chart-box hidden" id="currency-cb"><p class="ctitle">Exchange Rates vs Major Currencies</p><canvas id="currency-chart"></canvas></div>
+      </section>
+
+      <section id="music" class="panel">
+        <header class="ph"><div><h1 class="ptitle">Music</h1><p class="psub">Tracks & artists · iTunes Search API · 30s previews included</p></div><span class="badge">itunes.apple.com</span></header>
+        <div class="row">
+          <input id="music-input" type="text" placeholder="Artist or track name…" autocomplete="off">
+          <button id="music-btn" onclick="fetchMusic()">Search</button>
+        </div>
+        <div class="cd-wrap hidden" id="music-cd"><div class="cd-bar" id="music-cd-bar"></div><span class="cd-lbl" id="music-cd-lbl"></span></div>
+        <div id="music-out"></div>
+      </section>
+
+      <section id="news" class="panel">
+        <header class="ph"><div><h1 class="ptitle">Hacker News</h1><p class="psub">Top tech stories right now · HN Firebase API · No key</p></div><span class="badge">hacker-news.firebaseio.com</span></header>
+        <div class="row">
+          <button id="news-btn" class="full-btn" onclick="fetchNews()">Load Top Stories</button>
+        </div>
+        <div class="cd-wrap hidden" id="news-cd"><div class="cd-bar" id="news-cd-bar"></div><span class="cd-lbl" id="news-cd-lbl"></span></div>
+        <div id="news-out"></div>
+      </section>
+
     </main>
+  </div>
+
+  <div id="audio-bar" class="audio-bar hidden">
+    <div class="audio-viz"><span></span><span></span><span></span><span></span><span></span></div>
+    <span class="audio-name" id="audio-name">—</span>
+    <button class="audio-stop" onclick="stopAudio()">■ Stop</button>
   </div>
 
   <script src="app.js"></script>
