@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Explorer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span class="brand-name">API Explorer</span>
+      </div>
+      <nav class="nav">
+        <button class="nav-item active" data-tab="weather">
+          <span class="nav-icon">◎</span> Weather
+        </button>
+        <button class="nav-item" data-tab="nasa">
+          <span class="nav-icon">◎</span> NASA APOD
+        </button>
+        <button class="nav-item" data-tab="crypto">
+          <span class="nav-icon">◎</span> Crypto
+        </button>
+        <button class="nav-item" data-tab="github">
+          <span class="nav-icon">◎</span> GitHub
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="req-counter">
+          <span class="req-num" id="req-count">0</span>
+          <span class="req-label">requests made</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section id="weather" class="panel active">
+        <header class="panel-head">
+          <div>
+            <h1 class="panel-title">Weather</h1>
+            <p class="panel-sub">Current conditions via Open-Meteo · No API key required</p>
+          </div>
+          <span class="api-badge">open-meteo.com</span>
+        </header>
+        <div class="input-row">
+          <input id="weather-input" type="text" placeholder="City name, e.g. Tokyo" />
+          <button onclick="fetchWeather()">Fetch</button>
+        </div>
+        <div id="weather-result" class="result-area hidden"></div>
+        <div id="weather-chart-wrap" class="chart-wrap hidden">
+          <p class="chart-label">Current Conditions</p>
+          <canvas id="weather-chart"></canvas>
+        </div>
+      </section>
+
+      <section id="nasa" class="panel">
+        <header class="panel-head">
+          <div>
+            <h1 class="panel-title">NASA Picture of the Day</h1>
+            <p class="panel-sub">Daily astronomy image via NASA APOD API</p>
+          </div>
+          <span class="api-badge">api.nasa.gov</span>
+        </header>
+        <div class="input-row">
+          <button class="full-btn" onclick="fetchNASA()">Load Today's Image</button>
+        </div>
+        <div id="nasa-result" class="result-area hidden"></div>
+      </section>
+
+      <section id="crypto" class="panel">
+        <header class="panel-head">
+          <div>
+            <h1 class="panel-title">Crypto Prices</h1>
+            <p class="panel-sub">Live data via CoinGecko public API</p>
+          </div>
+          <span class="api-badge">coingecko.com</span>
+        </header>
+        <div class="input-row">
+          <button class="full-btn" onclick="fetchCrypto()">Fetch Live Prices</button>
+        </div>
+        <div id="crypto-result" class="result-area hidden"></div>
+        <div id="crypto-chart-wrap" class="chart-wrap hidden">
+          <p class="chart-label">24h Price Change %</p>
+          <canvas id="crypto-chart"></canvas>
+        </div>
+      </section>
+
+      <section id="github" class="panel">
+        <header class="panel-head">
+          <div>
+            <h1 class="panel-title">GitHub Profile</h1>
+            <p class="panel-sub">Public stats via GitHub REST API</p>
+          </div>
+          <span class="api-badge">api.github.com</span>
+        </header>
+        <div class="input-row">
+          <input id="github-input" type="text" placeholder="GitHub username, e.g. torvalds" />
+          <button onclick="fetchGitHub()">Fetch</button>
+        </div>
+        <div id="github-result" class="result-area hidden"></div>
+        <div id="github-chart-wrap" class="chart-wrap hidden">
+          <p class="chart-label">Profile Stats</p>
+          <canvas id="github-chart"></canvas>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
